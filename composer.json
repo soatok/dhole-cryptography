@@ -1,0 +1,41 @@
+{
+  "name": "soatok/dhole-cryptography",
+  "description": "Boring (dull) cryptography for furry projects (created by a dhole)",
+  "license": "ISC",
+  "authors": [
+    {
+      "name": "Soatok Dreamseeker",
+      "role": "Developer",
+      "homepage": "https://soatok.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ext-json": "*",
+    "ext-sodium": "*",
+    "paragonie/constant_time_encoding": "^2",
+    "paragonie/hidden-string": "^1",
+    "paragonie/sodium_compat": "^1.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Soatok\\DholeCrypto\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Soatok\\DholeCrypto\\Tests\\": "test/"
+    }
+  },
+  "config": {
+    "process-timeout" : 0
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8",
+    "vimeo/psalm": "^3"
+  },
+  "scripts": {
+    "test": "phpunit",
+    "type-check": "psalm"
+  }
+}
