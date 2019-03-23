@@ -1,5 +1,11 @@
 # Dhole Cryptography
 
+[![Linux Build Status](https://travis-ci.org/soatok/dhole-cryptography.svg?branch=master)](https://travis-ci.org/soatok/dhole-cryptography)
+[![Latest Stable Version](https://poser.pugx.org/soatok/dhole-cryptography/v/stable)](https://packagist.org/packages/soatok/dhole-cryptography)
+[![Latest Unstable Version](https://poser.pugx.org/soatok/dhole-cryptography/v/unstable)](https://packagist.org/packages/soatok/dhole-cryptography)
+[![License](https://poser.pugx.org/soatok/dhole-cryptography/license)](https://packagist.org/packages/soatok/dhole-cryptography)
+[![Downloads](https://img.shields.io/packagist/dt/soatok/dhole-cryptography.svg)](https://packagist.org/packages/soatok/dhole-cryptography)
+
 PHP libsodium wrapper for Soatok's PHP projects. Released under the very
 permissive ISC license.
 
