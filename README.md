@@ -158,4 +158,86 @@ if (!Symmetric::verify($msg, $key, $auth)) {
 
 ### Password Storage
 
+```php
+<?php
+use ParagonIE\HiddenString\HiddenString;
+use Soatok\DholeCrypto\Key\SymmetricKey;
+use Soatok\DholeCrypto\Password;
 
+$key = SymmetricKey::generate();
+
+$pwHandler = new Password($key);
+
+$password = new HiddenString('cowwect howse battewy staple UwU');
+$pwhash = $pwHandler->hash($password);
+if (!$pwHandler->verify($password, $pwhash)) {
+    die("access denied");
+}
+```
+
+### Keyring
+
+You can serialize any key by using the `Keyring` class.
+
+```php
+<?php
+use Soatok\DholeCrypto\Key\AsymmetricSecretKey;
+use Soatok\DholeCrypto\Key\SymmetricKey;
+use Soatok\DholeCrypto\Keyring;
+
+// Generate some keys...
+$secretKey = AsymmetricSecretKey::generate();
+$publicKey = $secretKey->getPublicKey();
+$symKey = SymmetricKey::generate();
+
+// Load a serializer.
+$keyring = new Keyring();
+
+// Serialize them as strings...
+$sk = $keyring->save($secretKey);
+$pk = $keyring->save($publicKey);
+$key = $keyring->save($symKey);
+
+// Load them from a string...
+$loadSk = $keyring->load($sk);
+$loadPk = $keyring->load($pk);
+$loadKey = $keyring->load($key);
+```
+
+The `Keyring` class also supports keywrap. Simply pass a separate
+`SymmetricKey` instance to the constructor to get wrapped keys.
+
+```php
+<?php
+use Soatok\DholeCrypto\Key\AsymmetricSecretKey;
+use Soatok\DholeCrypto\Key\SymmetricKey;
+use Soatok\DholeCrypto\Keyring;
+
+// Keywrap key...
+$wrap = SymmetricKey::generate();
+
+// Generate some keys...
+$secretKey = AsymmetricSecretKey::generate();
+$publicKey = $secretKey->getPublicKey();
+$symKey = SymmetricKey::generate();
+
+// Load a serializer.
+$keyring = new Keyring($wrap);
+
+// Serialize them as strings...
+$sk = $keyring->save($secretKey);
+$pk = $keyring->save($publicKey);
+$key = $keyring->save($symKey);
+
+// Load them from a string...
+$loadSk = $keyring->load($sk);
+$loadPk = $keyring->load($pk);
+$loadKey = $keyring->load($key);
+```
+
+# Support
+
+If you run into any trouble using this library, or something breaks,
+feel free to file a Github issue.
+
+If you need help with integration, [Soatok is available for freelance work](https://soatok.com/freelance).
