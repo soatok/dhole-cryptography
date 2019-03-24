@@ -109,4 +109,18 @@ final class AsymmetricSecretKey implements CryptographicKeyInterface
         }
         return $this->birationalSecret;
     }
+
+    /**
+     * Don't use this. It's meant to be used by the Keyring class.
+     *
+     * @param HiddenString $str
+     * @return self
+     *
+     * @internal
+     */
+    public function injectBirationalEquivalent(HiddenString $str): self
+    {
+        $this->birationalSecret = $str;
+        return $this;
+    }
 }

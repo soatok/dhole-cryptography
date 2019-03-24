@@ -62,6 +62,34 @@ abstract class Symmetric
     }
 
     /**
+     * @param string $message
+     * @param SymmetricKey $key
+     * @param string $mac
+     * @param bool $macIsRaw
+     *
+     * @return bool
+     * @throws \SodiumException
+     */
+    public static function verify(
+        string $message,
+        SymmetricKey $key,
+        string $mac,
+        bool $macIsRaw = false
+    ): bool {
+        if (!$macIsRaw) {
+            $mac = Hex::decode($mac);
+        }
+
+        $subKey = NaCl::crypto_generichash(
+            $key->getRawKeyMaterial(),
+            self::AUTH_DOMAIN_SEPARATION
+        );
+        $calc = NaCl::crypto_auth($message, $subKey);
+        \sodium_memzero($subKey);
+        return \hash_equals($calc, $mac);
+    }
+
+    /**
      * @param HiddenString $message
      * @param SymmetricKey $key
      *
@@ -116,34 +144,6 @@ abstract class Symmetric
     }
 
     /**
-     * @param string $message
-     * @param SymmetricKey $key
-     * @param string $mac
-     * @param bool $macIsRaw
-     *
-     * @return bool
-     * @throws \SodiumException
-     */
-    public static function verify(
-        string $message,
-        SymmetricKey $key,
-        string $mac,
-        bool $macIsRaw = false
-    ): bool {
-        if (!$macIsRaw) {
-            $mac = Hex::decode($mac);
-        }
-
-        $subKey = NaCl::crypto_generichash(
-            $key->getRawKeyMaterial(),
-            self::AUTH_DOMAIN_SEPARATION
-        );
-        $calc = NaCl::crypto_auth($message, $subKey);
-        \sodium_memzero($subKey);
-        return \hash_equals($calc, $mac);
-    }
-
-    /**
      * @param string $encrypted
      * @param SymmetricKey $key
      * @param string $additionalData
@@ -189,5 +189,20 @@ abstract class Symmetric
         $hiddenString = new HiddenString($plaintext);
         \sodium_memzero($plaintext);
         return $hiddenString;
+    }
+
+    /**
+     * Is this string a ciphertext that can be decrypted by this library?
+     *
+     * @param string $message
+     * @return bool
+     */
+    public static function isValidCiphertext(string $message): bool
+    {
+        if (Binary::safeStrlen($message) < 8) {
+            return false;
+        }
+        $header = Binary::safeSubstr($message, 0, 8);
+        return \in_array($header, self::ALLOWED_HEADERS, true);
     }
 }
