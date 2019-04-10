@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Soatok\DholeCrypto\Tests;
 
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use ParagonIE\ConstantTime\Binary;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Soatok\DholeCrypto\Asymmetric;
@@ -101,6 +102,7 @@ class AsymmetricTest extends TestCase
 
         $message = "I certify that you have paid your $350 awoo fine";
         $sig = Asymmetric::sign($message, $secret);
+        $this->assertSame(128, Binary::safeStrlen($sig));
         $this->assertTrue(Asymmetric::verify($message, $public, $sig));
     }
 }

@@ -86,8 +86,8 @@ abstract class Asymmetric
         AsymmetricPublicKey $pk
     ): HiddenString {
         $decrypted = self::unseal($msg, $sk)->getString();
-        $signature = Binary::safeSubstr($decrypted, 0, 88);
-        $plaintext = Binary::safeSubstr($decrypted, 88);
+        $signature = Binary::safeSubstr($decrypted, 0, 128);
+        $plaintext = Binary::safeSubstr($decrypted, 128);
         sodium_memzero($decrypted);
         try {
             $result = self::verify($plaintext, $pk, $signature);
@@ -163,11 +163,12 @@ abstract class Asymmetric
      */
     public static function sign(string $msg, AsymmetricSecretKey $sk): string
     {
+        $random = \random_bytes(32);
         return Base64UrlSafe::encode(
             \sodium_crypto_sign_detached(
-                $msg,
+                $random . $msg,
                 $sk->getRawKeyMaterial()
-            )
+            ) . $random
         );
     }
 
@@ -180,9 +181,12 @@ abstract class Asymmetric
      */
     public static function verify(string $msg, AsymmetricPublicKey $pk, string $sig): bool
     {
+        $decoded = Base64UrlSafe::decode($sig);
+        $signature = Binary::safeSubstr($decoded, 0, 64);
+        $random = Binary::safeSubstr($decoded, 64);
         return \sodium_crypto_sign_verify_detached(
-            Base64UrlSafe::decode($sig),
-            $msg,
+            $signature,
+            $random . $msg,
             $pk->getRawKeyMaterial()
         );
     }
