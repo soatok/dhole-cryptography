@@ -21,7 +21,7 @@ final class Password
     /** @var SymmetricKey $key */
     private $key;
 
-    /** @var array<string, int> $options */
+    /** @var array<string, int|string> $options */
     private $options;
 
     /**
@@ -35,7 +35,9 @@ final class Password
         array $options = self::DEFAULT
     ) {
         $this->key = $key;
-        $this->options = $options + self::DEFAULT;
+        /** @var array<string, int|string> $options */
+        $options = $options + (array) self::DEFAULT;
+        $this->options = $options;
     }
 
     /**
@@ -49,8 +51,8 @@ final class Password
     {
         $hash = \sodium_crypto_pwhash_str(
             $password->getString(),
-            $this->options['ops'],
-            $this->options['mem']
+            (int) $this->options['ops'],
+            (int) $this->options['mem']
         );
         $ciphertext = Symmetric::encryptWithAd(
             new HiddenString($hash),
@@ -73,7 +75,7 @@ final class Password
     {
         // Encode the current requirements string
         $encoded = 'm=' .
-                       ($this->options['mem'] >> 10) .
+                       ((int) $this->options['mem'] >> 10) .
                    ',t=' .
                        $this->options['ops'] .
                    ',p=1';
@@ -91,7 +93,7 @@ final class Password
         sodium_memzero($hash);
 
         // Does the algorithm match what we expect?
-        $current = hash_equals($this->options['alg'], $alg);
+        $current = hash_equals((string) $this->options['alg'], $alg);
         sodium_memzero($alg);
 
         // Do the parameters match the configured ops/mem costs?

@@ -114,6 +114,11 @@ class Keyring
      */
     protected function loadAsymmetricPublicKey(string $serialized): AsymmetricPublicKey
     {
+        /**
+         * @var string $header
+         * @var string $body
+         * @var string $checksum
+         */
         [$header, $body, $checksum] = $this->getComponents($serialized);
 
         $calc = sodium_crypto_generichash($header . $body, '', 16);
@@ -146,6 +151,11 @@ class Keyring
      */
     protected function loadAsymmetricSecretKey(string $serialized): AsymmetricSecretKey
     {
+        /**
+         * @var string $header
+         * @var string $body
+         * @var string $checksum
+         */
         [$header, $body, $checksum] = $this->getComponents($serialized);
 
         $calc = sodium_crypto_generichash($header . $body, '', 16);
@@ -178,6 +188,11 @@ class Keyring
      */
     protected function loadSymmetricKey(string $serialized): SymmetricKey
     {
+        /**
+         * @var string $header
+         * @var string $body
+         * @var string $checksum
+         */
         [$header, $body, $checksum] = $this->getComponents($serialized);
         $calc = sodium_crypto_generichash($header . $body, '', 16);
         if (!hash_equals($calc, $checksum)) {
@@ -202,6 +217,7 @@ class Keyring
      */
     protected function saveAsymmetricPublicKey(AsymmetricPublicKey $key): string
     {
+        /** @var string $header */
         $header = static::KTYPE_ASYMMETRIC_PUBLIC;
         $body = $key->getRawKeyMaterial() . $key->getBirationalPublic()->getString();
         $checksum = sodium_crypto_generichash($header . $body, '', 16);
@@ -215,6 +231,7 @@ class Keyring
      */
     protected function saveAsymmetricSecretKey(AsymmetricSecretKey $key): string
     {
+        /** @var string $header */
         $header = static::KTYPE_ASYMMETRIC_SECRET;
         $body = $key->getRawKeyMaterial() . $key->getBirationalSecret()->getString();
         $checksum = sodium_crypto_generichash($header . $body, '', 16);
@@ -228,6 +245,7 @@ class Keyring
      */
     protected function saveSymmetricKey(SymmetricKey $key): string
     {
+        /** @var string $header */
         $header = static::KTYPE_SYMMETRIC;
         $body = $key->getRawKeyMaterial();
         $checksum = sodium_crypto_generichash($header . $body, '', 16);

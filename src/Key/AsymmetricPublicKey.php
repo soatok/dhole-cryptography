@@ -17,7 +17,7 @@ final class AsymmetricPublicKey implements CryptographicKeyInterface
     /** @var HiddenString $public */
     private $public;
 
-    /** @var HiddenString $birationalPublic */
+    /** @var HiddenString|null $birationalPublic */
     private $birationalPublic;
 
     /**
@@ -56,7 +56,7 @@ final class AsymmetricPublicKey implements CryptographicKeyInterface
      */
     public function getBirationalPublic(): HiddenString
     {
-        if (!$this->birationalPublic) {
+        if (empty($this->birationalPublic)) {
             $this->birationalPublic = new HiddenString(
                 sodium_crypto_sign_ed25519_pk_to_curve25519(
                     $this->public->getString()

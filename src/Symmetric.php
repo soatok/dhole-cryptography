@@ -51,7 +51,7 @@ abstract class Symmetric
     ): string {
         $subKey = NaCl::crypto_generichash(
             $key->getRawKeyMaterial(),
-            static::AUTH_DOMAIN_SEPARATION
+            (string) static::AUTH_DOMAIN_SEPARATION
         );
         $mac = NaCl::crypto_auth($message, $subKey);
         \sodium_memzero($subKey);
@@ -82,7 +82,7 @@ abstract class Symmetric
 
         $subKey = NaCl::crypto_generichash(
             $key->getRawKeyMaterial(),
-            static::AUTH_DOMAIN_SEPARATION
+            (string) static::AUTH_DOMAIN_SEPARATION
         );
         $calc = NaCl::crypto_auth($message, $subKey);
         \sodium_memzero($subKey);
@@ -121,11 +121,11 @@ abstract class Symmetric
         // This is IND-CCA3 secure:
         $ciphertext = sodium_crypto_aead_xchacha20poly1305_ietf_encrypt(
             $message->getString(),
-            static::HEADER . $nonce . $additionalData,
+            (string) static::HEADER . $nonce . $additionalData,
             $nonce,
             $key->getRawKeyMaterial()
         );
-        return static::HEADER . Base64UrlSafe::encode($nonce . $ciphertext);
+        return (string) static::HEADER . Base64UrlSafe::encode($nonce . $ciphertext);
     }
 
     /**
@@ -163,7 +163,7 @@ abstract class Symmetric
             );
         }
         $header = Binary::safeSubstr($encrypted, 0, 8);
-        if (!\in_array($header, static::ALLOWED_HEADERS, true)) {
+        if (!\in_array($header, (array) static::ALLOWED_HEADERS, true)) {
             throw new CryptoException('Invalid message header');
         }
         $encoded = Binary::safeSubstr($encrypted, 8);
@@ -177,9 +177,10 @@ abstract class Symmetric
         $nonce = Binary::safeSubstr($decoded, 0, 24);
         $ciphertext = Binary::safeSubstr($decoded, 24);
 
+        /** @var string|bool $plaintext */
         $plaintext = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt(
             $ciphertext,
-            static::HEADER . $nonce . $additionalData,
+            (string) static::HEADER . $nonce . $additionalData,
             $nonce,
             $key->getRawKeyMaterial()
         );
@@ -203,6 +204,6 @@ abstract class Symmetric
             return false;
         }
         $header = Binary::safeSubstr($message, 0, 8);
-        return \in_array($header, self::ALLOWED_HEADERS, true);
+        return \in_array($header, (array) static::ALLOWED_HEADERS, true);
     }
 }
