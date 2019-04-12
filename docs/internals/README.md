@@ -22,6 +22,6 @@
 * Authentication
   * Subkey derived with BLAKE2b-MAC with the key set to the domain separation
     constant, `DHOLEcrypto-Domain5eparatorConstant`.
-  * HMAC-SHA512 truncated to 256 bitc
+  * HMAC-SHA512 truncated to 256 bits
 * Encryption (AEAD)
   * XChaCha20-Poly1305
