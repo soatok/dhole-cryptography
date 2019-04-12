@@ -13,6 +13,7 @@ use ParagonIE\HiddenString\HiddenString;
 final class Password
 {
     const DEFAULT = [
+        'alg' => 'argon2id',
         'mem' => SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
         'ops' => SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE
     ];
@@ -58,6 +59,48 @@ final class Password
         );
         \sodium_memzero($hash);
         return $ciphertext;
+    }
+
+    /**
+     * @param string $encryptedHash
+     * @param string $ad
+     *
+     * @return bool
+     * @throws CryptoException
+     * @throws \SodiumException
+     */
+    public function needsRehash(string $encryptedHash, string $ad = ''): bool
+    {
+        // Encode the current requirements string
+        $encoded = 'm=' .
+                       ($this->options['mem'] >> 10) .
+                   ',t=' .
+                       $this->options['ops'] .
+                   ',p=1';
+
+        // Decrypt the hash
+        $hash = Symmetric::decryptWithAd($encryptedHash, $this->key, $ad)->getString();
+
+        // $argon2id$v=19$m=65536,t=2,p=1$salt$hash
+        //  \######/      \#############/
+        //   \####/        \###########/
+        //    `--'          `---------'
+        //      \                /
+        //     This is all we need
+        [$alg, , $params] = explode('$', ltrim($hash, '$'));
+        sodium_memzero($hash);
+
+        // Does the algorithm match what we expect?
+        $current = hash_equals($this->options['alg'], $alg);
+        sodium_memzero($alg);
+
+        // Do the parameters match the configured ops/mem costs?
+        $current = $current && hash_equals($encoded, $params);
+        sodium_memzero($params);
+        sodium_memzero($encoded);
+
+        // Return TRUE if not current (meaning: needs to be rehashed)s
+        return !$current;
     }
 
     /**

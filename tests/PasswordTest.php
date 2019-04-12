@@ -14,6 +14,26 @@ use Soatok\DholeCrypto\Password;
  */
 class PasswordTest extends TestCase
 {
+    public function testNeedsRehash()
+    {
+        $symKey = SymmetricKey::generate();
+        $password = new HiddenString("correct horse battery staple");
+        $legacy = new Password($symKey, ['mem' => 1 << 14, 'ops' => 3]); // m = 16 MB, t = 3
+        $hasher = new Password($symKey, ['mem' => 1 << 16, 'ops' => 2]); // m = 64 MB, t = 2
+
+        $pwhash = $legacy->hash($password);
+        $this->assertTrue($hasher->needsRehash($pwhash));
+        $this->assertFalse($legacy->needsRehash($pwhash));
+        $this->assertFalse($legacy->needsRehash($pwhash));
+        $this->assertTrue($hasher->needsRehash($pwhash));
+
+        $pwhash = $hasher->hash($password);
+        $this->assertFalse($hasher->needsRehash($pwhash));
+        $this->assertTrue($legacy->needsRehash($pwhash));
+        $this->assertTrue($legacy->needsRehash($pwhash));
+        $this->assertFalse($hasher->needsRehash($pwhash));
+    }
+
     /**
      * @throws CryptoException
      * @throws \SodiumException
