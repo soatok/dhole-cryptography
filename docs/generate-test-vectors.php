@@ -226,8 +226,8 @@ try {
         ];
 
         $aad = 'Bork whistle';
-        $encrypted = Symmetric::encrypt($message, $symDhole, $aad);
-        $decrypted = Symmetric::decrypt($encrypted, $symDhole, $aad);
+        $encrypted = Symmetric::encryptWithAd($message, $symDhole, $aad);
+        $decrypted = Symmetric::decryptWithAd($encrypted, $symDhole, $aad);
         $tests['symmetric']['encrypt'][] = [
             'key' => 'default',
             'aad' => $aad,
