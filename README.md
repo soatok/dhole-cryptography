@@ -11,7 +11,7 @@ permissive ISC license.
 
 **Requires PHP 7.2**.
 
-## Dhole Cryptogrpahy in Other Programming Languages
+## Dhole Cryptography in Other Programming Languages
 
 * [JavaScript (Node.js)](https://github.com/soatok/dholecrypto-js)
 
