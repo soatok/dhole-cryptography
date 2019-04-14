@@ -202,13 +202,14 @@ try {
             'message' => $message->getString(),
             'signature' => $sign
         ];
-        $sign = Asymmetric::sign($message->getString(), $foxSecret);
+        $sign = Asymmetric::sign($message->getString(), $wolfSecret);
         $tests['asymmetric']['sign'][] = [
             'signer' => 'wolf',
             'message' => $message->getString(),
             'signature' => $sign
         ];
 
+        // Generate Symmetric::auth() test vectors:
         $mac = Symmetric::auth($message->getString(), $symDhole);
         $tests['symmetric']['auth'][] = [
             'key' => 'default',
@@ -216,6 +217,7 @@ try {
             'mac' => $mac
         ];
 
+        // Generate Symmetric::encrypt() test vectors:
         $encrypted = Symmetric::encrypt($message, $symDhole);
         $decrypted = Symmetric::decrypt($encrypted, $symDhole);
         $tests['symmetric']['encrypt'][] = [
