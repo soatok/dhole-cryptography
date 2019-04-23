@@ -1,5 +1,6 @@
 # Dhole Cryptography
 
+[![Support on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.herokuapp.com%2Fsoatok&style=flat)](https://patreon.com/soatok)
 [![Linux Build Status](https://travis-ci.org/soatok/dhole-cryptography.svg?branch=master)](https://travis-ci.org/soatok/dhole-cryptography)
 [![Latest Stable Version](https://poser.pugx.org/soatok/dhole-cryptography/v/stable)](https://packagist.org/packages/soatok/dhole-cryptography)
 [![Latest Unstable Version](https://poser.pugx.org/soatok/dhole-cryptography/v/unstable)](https://packagist.org/packages/soatok/dhole-cryptography)
