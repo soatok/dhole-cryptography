@@ -4,13 +4,12 @@ namespace Soatok\DholeCrypto\Tests;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
-use Soatok\DholeCrypto\Asymmetric;
+use Soatok\DholeCrypto\{Asymmetric, AsymmetricFile, Keyring, Symmetric};
 use Soatok\DholeCrypto\Key\{
     AsymmetricSecretKey,
     AsymmetricPublicKey,
     SymmetricKey
 };
-use Soatok\DholeCrypto\Symmetric;
 
 /**
  * Class VectorTest
@@ -71,6 +70,28 @@ class VectorTest extends TestCase
                 $test['decrypted'],
                 $plain->getString()
             );
+        }
+    }
+
+    /**
+     * @throws \Soatok\DholeCrypto\Exceptions\CryptoException
+     * @throws \Soatok\DholeCrypto\Exceptions\FilesystemException
+     * @throws \SodiumException
+     */
+    public function testAsymmetricFile()
+    {
+        /** @var AsymmetricPublicKey $publicKey */
+        $publicKey = (new Keyring())->load(
+            $this->testVectors['asymmetric-file-sign']['public-key']
+        );
+        foreach ($this->testVectors['asymmetric-file-sign']['tests'] as $index => $test) {
+            $file = fopen('php://temp', 'wb');
+            fwrite($file, $test['contents']);
+            fseek($file, 0, SEEK_SET);
+            $this->assertTrue(
+                AsymmetricFile::verify($file, $publicKey, $test['signature'])
+            );
+            fclose($file);
         }
     }
 
