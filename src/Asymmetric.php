@@ -2,8 +2,10 @@
 declare(strict_types=1);
 namespace Soatok\DholeCrypto;
 
-use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\ConstantTime\Binary;
+use ParagonIE\ConstantTime\{
+    Base64UrlSafe,
+    Binary
+};
 use ParagonIE\HiddenString\HiddenString;
 use ParagonIE_Sodium_Compat as NaCl;
 use Soatok\DholeCrypto\Key\{

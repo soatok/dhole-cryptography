@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Soatok\DholeCrypto;
 
-use ParagonIE_Sodium_Compat as NaCl;
 use Soatok\DholeCrypto\Exceptions\FilesystemException;
 
 /**
