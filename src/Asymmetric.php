@@ -154,7 +154,6 @@ abstract class Asymmetric
         );
     }
 
-
     /**
      * @param string $msg
      * @param AsymmetricSecretKey $sk
