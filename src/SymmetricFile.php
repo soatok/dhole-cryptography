@@ -41,10 +41,13 @@ class SymmetricFile
     public static function hashFile(string $fileName, string $preamble = ''): string
     {
         $fp = fopen($fileName, 'rb');
+        if (!is_resource($fp)) {
+            throw new FilesystemException('Could not open file for reading: ' . $fileName);
+        }
         try {
             return self::hashResource($fp, $preamble);
         } finally {
-            fclose($fp);
+            @fclose($fp);
         }
     }
 
