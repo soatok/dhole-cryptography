@@ -38,14 +38,16 @@ abstract class Asymmetric
                 $sk->getBirationalSecret()->getString(),
                 $pk->getBirationalPublic()->getString(),
                 $sk->getPublicKey()->getBirationalPublic()->getString(),
-                $pk->getBirationalPublic()->getString()
+                $pk->getBirationalPublic()->getString(),
+                true
             );
         } else {
             $symmetric = NaCl::crypto_kx(
                 $sk->getBirationalSecret()->getString(),
                 $pk->getBirationalPublic()->getString(),
                 $pk->getBirationalPublic()->getString(),
-                $sk->getPublicKey()->getBirationalPublic()->getString()
+                $sk->getPublicKey()->getBirationalPublic()->getString(),
+                true
             );
         }
         $return = new SymmetricKey(new HiddenString($symmetric));
