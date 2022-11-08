@@ -144,10 +144,12 @@ abstract class Asymmetric
         $pk = Base64UrlSafe::decode($public);
 
         $symmetric = new SymmetricKey(new HiddenString(
-            NaCl::crypto_kx(
-                $sk->getBirationalSecret()->getString(),
-                $pk,
-                $pk,
+            sodium_crypto_generichash(
+                sodium_crypto_scalarmult
+                ($sk->getBirationalSecret()->getString(),
+                    $pk
+                ) .
+                $pk .
                 $sk->getPublicKey()->getBirationalPublic()->getString()
             )
         ));
