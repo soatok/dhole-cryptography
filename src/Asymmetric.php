@@ -33,24 +33,25 @@ abstract class Asymmetric
         AsymmetricPublicKey $pk,
         bool $isClient
     ): SymmetricKey {
+        $ecdh = sodium_crypto_scalarmult(
+            $sk->getBirationalSecret()->getString(),
+            $pk->getBirationalPublic()->getString()
+        );
         if ($isClient) {
-            $symmetric = NaCl::crypto_kx(
-                $sk->getBirationalSecret()->getString(),
-                $pk->getBirationalPublic()->getString(),
-                $sk->getPublicKey()->getBirationalPublic()->getString(),
-                $pk->getBirationalPublic()->getString(),
-                true
+            $symmetric = sodium_crypto_generichash(
+                $ecdh .
+                $sk->getPublicKey()->getBirationalPublic()->getString() .
+                $pk->getBirationalPublic()->getString()
             );
         } else {
-            $symmetric = NaCl::crypto_kx(
-                $sk->getBirationalSecret()->getString(),
-                $pk->getBirationalPublic()->getString(),
-                $pk->getBirationalPublic()->getString(),
-                $sk->getPublicKey()->getBirationalPublic()->getString(),
-                true
+            $symmetric = sodium_crypto_generichash(
+                $ecdh .
+                $pk->getBirationalPublic()->getString() .
+                $sk->getPublicKey()->getBirationalPublic()->getString()
             );
         }
         $return = new SymmetricKey(new HiddenString($symmetric));
+        sodium_memzero($ecdh);
         sodium_memzero($symmetric);
         return $return;
     }
