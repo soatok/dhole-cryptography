@@ -36,7 +36,7 @@ final class Password
     ) {
         $this->key = $key;
         /** @var array<string, int|string> $options */
-        $options = $options + (array) self::DEFAULT;
+        $options = $options + self::DEFAULT;
         $this->options = $options;
     }
 

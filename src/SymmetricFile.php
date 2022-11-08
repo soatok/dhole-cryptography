@@ -67,7 +67,6 @@ class SymmetricFile
         }
         $start = ftell($fp);
         $stat = fstat($fp);
-        /** @var int $size */
         $size = $stat['size'];
         fseek($fp, 0, SEEK_SET);
         $bytes = 0;

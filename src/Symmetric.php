@@ -177,10 +177,9 @@ abstract class Symmetric
         $nonce = Binary::safeSubstr($decoded, 0, 24);
         $ciphertext = Binary::safeSubstr($decoded, 24);
 
-        /** @var string|bool $plaintext */
         $plaintext = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt(
             $ciphertext,
-            (string) static::HEADER . $nonce . $additionalData,
+            ((string) static::HEADER) . $nonce . $additionalData,
             $nonce,
             $key->getRawKeyMaterial()
         );
