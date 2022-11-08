@@ -14,8 +14,8 @@
     "ext-json": "*",
     "ext-sodium": "*",
     "paragonie/constant_time_encoding": "^2",
-    "paragonie/hidden-string": "^1",
-    "paragonie/sodium_compat": "^1.9"
+    "paragonie/hidden-string": "^1|^2",
+    "paragonie/sodium_compat": "^1.19"
   },
   "autoload": {
     "psr-4": {
