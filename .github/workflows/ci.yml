@@ -22,7 +22,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, intl, sodium
-          ini-values: error_reporting=-1, display_errors=On
+          ini-values: max_execution_time=600, memory_limit=256M, error_reporting=-1, display_errors=On
           coverage: none
 
       - name: Install Composer dependencies (PHP < 8.2)
@@ -35,5 +35,5 @@ jobs:
         with:
           composer-options: --ignore-platform-reqs
 
-      #- name: PHPUnit tests
-      #  run: vendor/bin/phpunit
+      - name: PHPUnit tests
+        run: vendor/bin/phpunit
