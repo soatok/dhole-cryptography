@@ -13,6 +13,13 @@ use Soatok\DholeCrypto\Symmetric;
  */
 class SymmetricTest extends TestCase
 {
+    public function setUp(): void
+    {
+        if (!\extension_loaded('sodium')) {
+            $this->fail('Libsodium not loaded');
+        }
+    }
+
     /**
      * @throws CryptoException
      * @throws \SodiumException

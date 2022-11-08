@@ -12,6 +12,13 @@ use Soatok\DholeCrypto\SymmetricFile;
  */
 class SymmetricFileTest extends TestCase
 {
+    public function setUp(): void
+    {
+        if (!\extension_loaded('sodium')) {
+            $this->fail('Libsodium not loaded');
+        }
+    }
+
     /**
      * @throws \Soatok\DholeCrypto\Exceptions\FilesystemException
      * @throws \SodiumException

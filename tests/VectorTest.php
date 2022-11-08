@@ -23,6 +23,9 @@ class VectorTest extends TestCase
 
     public function setUp(): void
     {
+        if (!\extension_loaded('sodium')) {
+            $this->fail('Libsodium not loaded');
+        }
         $testVectors = json_decode(
             file_get_contents(dirname(__DIR__) . '/docs/test-vectors.json'),
             true

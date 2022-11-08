@@ -24,7 +24,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Soatok\\DholeCrypto\\Tests\\": "test/"
+      "Soatok\\DholeCrypto\\Tests\\": "tests/"
     }
   },
   "require-dev": {

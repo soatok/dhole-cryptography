@@ -24,6 +24,9 @@ class KeyringTest extends TestCase
 
     public function setUp(): void
     {
+        if (!\extension_loaded('sodium')) {
+            $this->fail('Libsodium not loaded');
+        }
         $this->ring = new Keyring();
         $this->wrapped = new Keyring(SymmetricKey::generate());
     }

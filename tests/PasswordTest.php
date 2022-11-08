@@ -14,6 +14,13 @@ use Soatok\DholeCrypto\Password;
  */
 class PasswordTest extends TestCase
 {
+    public function setUp(): void
+    {
+        if (!\extension_loaded('sodium')) {
+            $this->fail('Libsodium not loaded');
+        }
+    }
+
     public function testNeedsRehash()
     {
         $symKey = SymmetricKey::generate();
