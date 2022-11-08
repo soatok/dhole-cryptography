@@ -35,5 +35,5 @@ jobs:
         with:
           composer-options: --ignore-platform-reqs
 
-      - name: PHPUnit tests
-        run: vendor/bin/phpunit
+      #- name: PHPUnit tests
+      #  run: vendor/bin/phpunit
